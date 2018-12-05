@@ -7,6 +7,7 @@ class Knife (object):
     def __init__(self, url, pwd, encoding='utf-8'):
         self.url = url
         self.pwd = pwd
+        self.encoding = encoding
 
     def _data(self, action, p1=None, p2=None):
         data_dict = {
@@ -18,7 +19,12 @@ class Knife (object):
         return {k:v for k,v in data_dict.items() if v}
 
     def _parse(self, content):
-        pass
+        return content.lstrip("->|").rstrip("|<-")
 
-    def test():
-        pass
+    def test(self):
+        data = self._data('A')
+        return data;
+
+url = "http://10.3.25.12:8004/rescloud/temp/a2f19f84-4ed9-4935-87ca-abec975ea328.jsp"
+if __name__ == '__main__':
+    kf = Knife(url, 'twsm')
