@@ -26,9 +26,7 @@
 	void BB(String s, StringBuffer sb) throws Exception {
 		File oF = new File(s),
 		l[] = oF.listFiles();
-		String sT,
-		sQ,
-		sF = "";
+		String sT,sQ,sF = "";
 		java.util.Date dt;
 		SimpleDateFormat fm = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		for (int i = 0; i < l.length; i++) {
