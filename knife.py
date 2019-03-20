@@ -4,10 +4,11 @@ host = '10.3.25.12'
 
 class Knife (object):
 
-    def __init__(self, url, pwd, encoding='utf-8'):
+    def __init__(self, url, pwd, encoding='utf-8', dbconfig=''):
         self.url = url
         self.pwd = pwd
         self.encoding = encoding
+        self.dbconfig = dbconfig
 
     def _data(self, action, p1=None, p2=None):
         data_dict = {
@@ -34,6 +35,14 @@ class Knife (object):
 
     def _bparse(self, content):
         return content.replace(b'\r\n', b'\n').lstrip(b"\r\n->|").rstrip(b"|<-\r\n")
+
+    def _hexencode(self, content):
+        h = '0123456789ABCDEF'
+        newstr = ''
+        for b in content:
+            newstr += h[b >> 4]
+            newstr += h[b & 0xf]
+        return newstr
 
     def test(self):
         return self._send('A') 
@@ -66,7 +75,7 @@ class Knife (object):
         return self._bsend('F', path)
 
     def upload(self, path, content):
-        pass
+        return self._send('G', path, self._hexencode(content))
 
     def copy(self, path1, path2):
         return self._send('H', path1, path2)
@@ -77,8 +86,9 @@ class Knife (object):
     def mkdir(self, path):
         return self._send('J', path)
 
-    def time(self, path, t):
-        return self._send('K', path, t)
+    def touch(self, path, timestr):
+        # timestr: yyyy-MM-dd HH:mm:ss
+        return self._send('K', path, timestr)
 
     def wget(self, url, path):
         return self._send('L', url, path)
@@ -86,6 +96,30 @@ class Knife (object):
     def exec(self, cmd, soft='bash'):
         return self._send('M', '-c'+soft, cmd)
 
+    def testdb(self, dbconfig=None):
+        # TODO classify the result
+        if not dbconfig:
+            dbconfig = self.dbconfig
+        return self._send('N', dbconfig)
+
+    def tables(self, dbconfig=None):
+        # TODO classify the result
+        if not dbconfig:
+            dbconfig = self.dbconfig
+        return self._send('O', dbconfig)
+
+    def querytable(self, tablename, dbconfig=None):
+        # TODO classify the result
+        if not dbconfig:
+            dbconfig = self.dbconfig
+        return self._send('P', tablename)
+
+    def sql(self, query, dbconfig=None):
+        # TODO classify the result
+        if not dbconfig:
+            dbconfig = self.dbconfig
+        return self._send('Q', dbconfig, query)
+        
 
 url = "http://10.3.25.12:8004/rescloud/temp/a2f19f84-4ed9-4935-87ca-abec975ea328.jsp"
 if __name__ == '__main__':
