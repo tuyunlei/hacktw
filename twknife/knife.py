@@ -122,5 +122,6 @@ class Knife (object):
         
 
 url = "http://10.3.25.12:8004/rescloud/temp/a2f19f84-4ed9-4935-87ca-abec975ea328.jsp"
+url = "http://10.3.25.12:8004/rescloud/images/page.jsp"
 if __name__ == '__main__':
     kf = Knife(url, 'twsm')
